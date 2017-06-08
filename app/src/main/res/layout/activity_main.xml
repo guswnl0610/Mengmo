@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.guswn_000.mengmo.MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/content_main" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:onClick="onClick"
+                android:id="@+id/btnrecordadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/btnimgadd"
+                android:layout_alignLeft="@+id/btnimgadd"
+                android:layout_alignStart="@+id/btnimgadd"
+                android:layout_marginBottom="10dp"
+                android:background="@android:color/transparent"
+                android:visibility="gone"
+                android:src="@drawable/btnrecord_selector"
+                />
+
+            <ImageButton
+                android:onClick="onClick"
+                android:id="@+id/btnimgadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_above="@+id/btntextadd"
+                android:layout_alignLeft="@+id/btntextadd"
+                android:layout_alignStart="@+id/btntextadd"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                android:src="@drawable/btnimg_selector"
+                />
+
+            <ImageButton
+                android:onClick="onClick"
+                android:id="@+id/btntextadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_above="@+id/btnadd"
+                android:layout_alignRight="@+id/btnadd"
+                android:layout_alignEnd="@+id/btnadd"
+                android:visibility="gone"
+                android:src="@drawable/btntext_selector"
+
+                />
+
+            <ImageButton
+                android:onClick="onClick"
+                android:id="@+id/btnadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+
+                android:layout_margin="15dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/addbtn_selector"
+                 />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--app:backgroundTint="@android:color/transparent"-->
+        <!--app:srcCompat="@drawable/btnadd" />-->
+
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>
