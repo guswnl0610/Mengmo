@@ -21,55 +21,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
+        android:paddingBottom="3dp"
         android:background="#e6e6e6">
 
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="#ffffff"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="#ffffff">
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_row="0"
+                android:paddingLeft="5dp"
                 android:text="굵기"
                 android:textColor="#979797" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/width5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_row="1"
-
                 android:background="@android:color/transparent"
+
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penw1" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/width10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penw2" />
 
             <ImageButton
-                android:id="@+id/imageButton3"
+                android:id="@+id/width20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_row="2"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penw3" />
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/width30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penw4" />
 
         </GridLayout>
@@ -79,96 +85,128 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:background="#ffffff">
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
                 android:text="색상"
-                android:textColor="#979797"/>
+                android:textColor="#979797" />
 
             <ImageButton
-                android:id="@+id/imageButton5"
+                android:id="@+id/red"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/penred"
+                android:layout_column="0"
                 android:layout_row="1"
                 android:background="@android:color/transparent"
-                android:layout_column="0"
-                />
+                android:onClick="onClick"
+                app:srcCompat="@drawable/penred" />
 
             <ImageButton
-                android:id="@+id/imageButton6"
+                android:id="@+id/orange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penorange" />
 
             <ImageButton
-                android:id="@+id/imageButton7"
+                android:id="@+id/yellow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penyellow" />
 
             <ImageButton
-                android:id="@+id/imageButton8"
+                android:id="@+id/green"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/pengreen" />
 
             <ImageButton
-                android:id="@+id/imageButton9"
+                android:id="@+id/blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penblue" />
 
             <ImageButton
-                android:id="@+id/imageButton10"
+                android:id="@+id/navy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/pennavy"
-                android:layout_row="2"
                 android:layout_column="0"
+                android:layout_row="2"
                 android:background="@android:color/transparent"
-                />
+                android:onClick="onClick"
+                app:srcCompat="@drawable/pennavy" />
 
             <ImageButton
-                android:id="@+id/imageButton11"
+                android:id="@+id/purple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penpurple" />
 
             <ImageButton
-                android:id="@+id/imageButton12"
+                android:id="@+id/pink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penpink" />
 
             <ImageButton
-                android:id="@+id/imageButton13"
+                android:id="@+id/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penblack" />
 
             <ImageButton
-                android:id="@+id/imageButton14"
+                android:id="@+id/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:onClick="onClick"
                 app:srcCompat="@drawable/penwhite" />
-
-
-
-
 
         </GridLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="#ffffff"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:onClick="onClick"
+                android:id="@+id/eraser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/eraser" />
+        </LinearLayout>
+
     </LinearLayout>
+
+    <com.example.guswn_000.mengmo.Mypainter
+        android:id="@+id/painter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
 </LinearLayout>

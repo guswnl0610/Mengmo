@@ -8,9 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
 {
+    private long pressedTime = 0;
     boolean isaddbtnvisible = false;
     ImageButton btnadd,btntext,btnimg,btnrec;
 
@@ -72,6 +74,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
+    @Override
+    public void onBackPressed()
+    {
+//        super.onBackPressed();
+        if(pressedTime == 0)
+        {
+            Toast.makeText(this,"한 번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
+            pressedTime = System.currentTimeMillis();
+        }
+        else
+        {
+            int seconds = (int)(System.currentTimeMillis() - pressedTime);
+            if(seconds > 2000)
+            {
+                Toast.makeText(this,"한 번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
+                pressedTime = 0;
+            }
+            else
+            {
+                finish();
+            }
+        }
+    }
 }

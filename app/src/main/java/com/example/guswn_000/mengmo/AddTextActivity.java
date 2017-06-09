@@ -40,37 +40,11 @@ public class AddTextActivity extends AppCompatActivity
             case R.id.cancel:
                 if(!title.getText().toString().equals(""))
                 {
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-                    dlg.setTitle("확인")
-                            .setMessage("변경한 내용을 저장하지 않고 " +
-                                    "취소하시겠습니까?")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    finish();
-                                }
-                            })
-                            .setNegativeButton("취소",null)
-                            .show();
+                    checkDialog();
                 }
                 else if (!content.getText().toString().equals(""))
                 {
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-                    dlg.setTitle("확인")
-                            .setMessage("변경한 내용을 저장하지 않고 " +
-                                    "취소하시겠습니까?")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    finish();
-                                }
-                            })
-                            .setNegativeButton("취소",null)
-                            .show();
+                    checkDialog();
                 }
                 else
                 {
@@ -107,5 +81,41 @@ public class AddTextActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if(!title.getText().toString().equals(""))
+        {
+            checkDialog();
+        }
+        else if (!content.getText().toString().equals(""))
+        {
+            checkDialog();
+        }
+        else
+        {
+            Toast.makeText(this,"비었음",Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    public void checkDialog()
+    {
+        AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+        dlg.setTitle("확인")
+                .setMessage("변경한 내용을 저장하지 않고 " +
+                        "취소하시겠습니까?")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        finish();
+                    }
+                })
+                .setNegativeButton("취소",null)
+                .show();
     }
 }
