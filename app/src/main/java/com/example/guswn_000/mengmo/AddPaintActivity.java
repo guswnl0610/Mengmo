@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddPaintActivity extends AppCompatActivity
 {
@@ -42,7 +43,19 @@ public class AddPaintActivity extends AppCompatActivity
                 checkDialog();
                 break;
             case R.id.save:
+                if(titleet.getText().toString().trim().equals(""))
+                {
+                    Toast.makeText(this,"제목을 입력해주세요",Toast.LENGTH_SHORT).show();
+                    titleet.requestFocus();
+                }
+                else
+                {
+                    /*
 
+                    저장하는부분 여기에
+
+                     */
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
