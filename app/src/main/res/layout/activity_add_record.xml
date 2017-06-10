@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.example.guswn_000.mengmo.AddRecordActivity">
+
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:paddingBottom="30dp"
+        android:progress="0"
+        />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:onClick="onClick"
+            android:id="@+id/recstart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:paddingRight="50dp"
+            app:srcCompat="@drawable/recstart" />
+
+        <ImageButton
+            android:onClick="onClick"
+            android:id="@+id/recplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:paddingRight="50dp"
+            android:clickable="false"
+            app:srcCompat="@drawable/recplay" />
+
+        <ImageButton
+            android:onClick="onClick"
+            android:id="@+id/recstop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/recstop" />
+    </LinearLayout>
+</LinearLayout>
