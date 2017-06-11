@@ -2,6 +2,8 @@ package com.example.guswn_000.mengmo;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,20 +13,35 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-public class AddPaintActivity extends AppCompatActivity
+public class ShowPaintActivity extends AppCompatActivity
 {
     EditText titleet;
     Mypainter mypainter;
+    ImageView imageView;
+
+    String originfilename,originfilepath;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_paint);
+        setContentView(R.layout.activity_show_paint);
         titleet = (EditText)findViewById(R.id.ettitle);
-        mypainter = (Mypainter)findViewById(R.id.painter);
+        mypainter = (Mypainter)findViewById(R.id.mapainter);
+        imageView = (ImageView)findViewById(R.id.Openimgview);
+        Intent intent = getIntent();
+        originfilename = intent.getStringExtra("ShowImg");
+        originfilepath = getExternalPath() + "Mengmo/" + originfilename;
+        Toast.makeText(this,originfilepath,Toast.LENGTH_SHORT).show();
+        titleet.setText(originfilename.substring(0,originfilename.length()-4));
+
+//        Bitmap temp = BitmapFactory.decodeFile(originfilepath);
+//        mypainter.mcanvas.drawBitmap(temp,0,0,null);
+
+//        mypainter.Open(originfilepath);
+
     }
 
     @Override
@@ -32,12 +49,14 @@ public class AddPaintActivity extends AppCompatActivity
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.txtmenu, menu);
+        mypainter.Open(originfilepath);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+
         switch (item.getItemId())
         {
             case R.id.cancel:
@@ -53,9 +72,10 @@ public class AddPaintActivity extends AppCompatActivity
                 {
                     String filename = titleet.getText().toString().trim() + ".png";
                     MyImage img = new MyImage(filename);
+                    mypainter.Remove(originfilepath);
                     mypainter.Save(getExternalPath() + "Mengmo/" + filename);
                     Intent intent = getIntent();
-                    intent.putExtra("addimg",img);
+                    intent.putExtra("shownewimg",img);
                     setResult(RESULT_OK,intent);
                     finish();
                     /*
@@ -69,47 +89,12 @@ public class AddPaintActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkDialog()
-    {
-        AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-        dlg.setTitle("확인")
-                .setMessage("변경한 내용을 저장하지 않고 " +
-                        "취소하시겠습니까?")
-                .setPositiveButton("확인", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        finish();
-                    }
-                })
-                .setNegativeButton("취소",null)
-                .show();
-    }
-
-    public String getExternalPath()
-    {
-        String sdPath = "";
-        String ext = Environment.getExternalStorageState();
-        if(ext.equals(Environment.MEDIA_MOUNTED))
-        {
-            sdPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
-            //sdPath = "mnt/sdcard/";
-        }
-        else
-        {
-            sdPath = getFilesDir() + "";
-        }
-//        Toast.makeText(getApplicationContext(),sdPath,Toast.LENGTH_SHORT).show();
-        return sdPath;
-    }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         checkDialog();
-//        super.onBackPressed();
     }
+
 
     public void onClick(View v)
     {
@@ -164,4 +149,40 @@ public class AddPaintActivity extends AppCompatActivity
         }
     }
 
+    public void checkDialog()
+    {
+        AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+        dlg.setTitle("확인")
+                .setMessage("변경한 내용을 저장하지 않고 " +
+                        "취소하시겠습니까?")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        finish();
+                    }
+                })
+                .setNegativeButton("취소",null)
+                .show();
+    }
+
+
+
+    public String getExternalPath()
+    {
+        String sdPath = "";
+        String ext = Environment.getExternalStorageState();
+        if(ext.equals(Environment.MEDIA_MOUNTED))
+        {
+            sdPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+            //sdPath = "mnt/sdcard/";
+        }
+        else
+        {
+            sdPath = getFilesDir() + "";
+        }
+//        Toast.makeText(getApplicationContext(),sdPath,Toast.LENGTH_SHORT).show();
+        return sdPath;
+    }
 }

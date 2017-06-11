@@ -31,7 +31,8 @@
         <activity android:name=".AddPaintActivity" />
         <activity android:name=".AddRecordActivity" />
         <activity android:name=".ShowRecordActivity" />
-        <activity android:name=".ShowTextActivity"></activity>
+        <activity android:name=".ShowTextActivity" />
+        <activity android:name=".ShowPaintActivity"></activity>
     </application>
 
 </manifest>

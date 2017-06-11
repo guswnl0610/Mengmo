@@ -2,6 +2,7 @@ package com.example.guswn_000.mengmo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,6 +10,13 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by guswn_000 on 2017-06-08.
@@ -17,13 +25,22 @@ import android.view.View;
 public class Mypainter extends View
 {
     int oldX,oldY = -1;
-    Canvas mcanvas;
+    Canvas mcanvas = new Canvas();
     Bitmap mbitmap;
     Paint mpaint = new Paint();
 
     public Mypainter(Context context, @Nullable AttributeSet attrs)
     {
         super(context, attrs);
+        mpaint.setColor(Color.BLACK);
+        mpaint.setStrokeWidth(5);
+        mpaint.setStrokeJoin(Paint.Join.BEVEL);
+        mpaint.setStrokeCap(Paint.Cap.ROUND);
+    }
+
+    public Mypainter(Context context)
+    {
+        super(context);
         mpaint.setColor(Color.BLACK);
         mpaint.setStrokeWidth(5);
         mpaint.setStrokeJoin(Paint.Join.BEVEL);
@@ -151,6 +168,59 @@ public class Mypainter extends View
         mbitmap.eraseColor(Color.WHITE);
         invalidate();
     }
+
+
+
+    public void Save(String filename)
+    {
+        try
+        {
+            FileOutputStream out = new FileOutputStream(filename);
+            mbitmap.compress(Bitmap.CompressFormat.PNG,100,out);
+            out.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"File not found", Toast.LENGTH_SHORT).show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"IO Exception",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void Open(String filename)
+    {
+        try
+        {
+            FileInputStream in = new FileInputStream(filename);
+//            mcanvas = new Canvas();
+//            mcanvas.setBitmap(mbitmap);
+            mcanvas.drawBitmap(BitmapFactory.decodeStream(in),0,0,mpaint);
+            in.close();
+            invalidate();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"저장된 파일이 없습니다.",Toast.LENGTH_SHORT).show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"IO Exception",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void Remove(String path)
+    {
+        File file = new File(path);
+        file.delete();
+    }
+
+
 
 
 

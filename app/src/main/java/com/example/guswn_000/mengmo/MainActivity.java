@@ -37,11 +37,14 @@ public class MainActivity extends AppCompatActivity
     RecordAdapter recordAdapter;
     ArrayList<MyText> texts = new ArrayList<>();
     TextAdapter textAdapter;
+    ArrayList<MyImage> images = new ArrayList<>();
+    ImageAdapter imageAdapter;
 
     final int NEW_RECORD = 20;
     final int NEW_TEXT = 21;
     final int NEW_IMAGE = 22;
     final int SHOW_TEXT = 23;
+    final int SHOW_IMG = 24;
 
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
@@ -90,7 +93,10 @@ public class MainActivity extends AppCompatActivity
         txtlistview.setAdapter(textAdapter);
         txtfilelist();
         txtlistSetting();
-
+        imageAdapter = new ImageAdapter(this,images);
+        imglistview.setAdapter(imageAdapter);
+        imgfilelist();
+        imglistSetting();
     }
 
     public void recfilelist() //음성녹음 파일을 리스트에 넣는다
@@ -127,6 +133,23 @@ public class MainActivity extends AppCompatActivity
             }
         }
         textAdapter.notifyDataSetChanged();
+    }
+
+    public void imgfilelist()
+    {
+        File[] imgfiles = new File(getExternalPath() + "Mengmo").listFiles();
+        images.clear();
+        if(imgfiles != null)
+        {
+            for (File f : imgfiles)
+            {
+                if(f.getName().contains(".png"))
+                {
+                    images.add(new MyImage(f.getName()));
+                }
+            }
+        }
+        imageAdapter.notifyDataSetChanged();
     }
 
     public void recSort() //음성녹음 리스트 이름순 정렬
@@ -204,6 +227,38 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void imglistSetting()
+    {
+        imglistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                Intent intent = new Intent(MainActivity.this,ShowPaintActivity.class);
+                intent.putExtra("ShowImg",images.get(position).getTitle());
+                startActivityForResult(intent,SHOW_IMG);
+            }
+        });
+
+        imglistview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,final int position, long id) {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(view.getContext());
+                dlg.setTitle("삭제 확인")
+                        .setMessage("선택한 이미지를 삭제하시겠습니까?")
+                        .setNegativeButton("취소",null)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                remove(getExternalPath() + "Mengmo/" + images.get(position).getTitle());
+                                imgfilelist();
+                            }
+                        })
+                        .show();
+                return true;
+            }
+        });
+    }
+
 
     public void onClick(View v)
     {
@@ -232,7 +287,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.btnimgadd:
                 Intent intentimg = new Intent(MainActivity.this,AddPaintActivity.class);
-                startActivity(intentimg);
+//                startActivity(intentimg);
+                startActivityForResult(intentimg,NEW_IMAGE);
                 break;
             case R.id.btnrecordadd:
                 Intent intentrec = new Intent(MainActivity.this,AddRecordActivity.class);
@@ -321,7 +377,11 @@ public class MainActivity extends AppCompatActivity
         }
         else if (requestCode == NEW_IMAGE)
         {
-
+            if(resultCode == RESULT_OK)
+            {
+                MyImage newimg = data.getParcelableExtra("addimg");
+                imgfilelist();
+            }
         }
         else if (requestCode == SHOW_TEXT)
         {
@@ -329,6 +389,14 @@ public class MainActivity extends AppCompatActivity
             {
                 MyText newtxt = data.getParcelableExtra("showtxt");
                 txtfilelist();
+            }
+        }
+        else if (requestCode == SHOW_IMG)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                MyImage newimg = data.getParcelableExtra("shownewimg");
+                imgfilelist();
             }
         }
     }
