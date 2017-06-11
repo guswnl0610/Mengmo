@@ -1,5 +1,6 @@
 package com.example.guswn_000.mengmo;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -18,13 +19,15 @@ import java.util.Date;
 
 public class AddRecordActivity extends AppCompatActivity
 {
-    String filepath;
+    String filepath,filename;
     MediaRecorder recorder = null;
     MediaPlayer player = null;
     ImageButton start,stop,play;
     SeekBar seekBar;
     boolean isplaying = false;
     int point = 0;
+    MyRecord myRecord;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -82,21 +85,17 @@ public class AddRecordActivity extends AppCompatActivity
         }
     };
 
-    @Override
-    public void onBackPressed()
-    {
-        super.onBackPressed();
-    }
 
     public void onClick(View v)
     {
         if(v.getId() == R.id.recstart)
         {
+
             long now = System.currentTimeMillis();
             Date date = new Date(now);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             filepath = getExternalPath() + "Mengmo/"+dateFormat.format(date).toString()+"Rec.mp4";
-
+            filename = dateFormat.format(date).toString()+"Rec.mp4";
             //녹음버튼 눌렀을 때
             start.setEnabled(false);
             stop.setEnabled(true);
@@ -127,10 +126,13 @@ public class AddRecordActivity extends AppCompatActivity
             recorder.stop();
             recorder.release();
             recorder = null;
-            start.setEnabled(true);
+            start.setEnabled(false);
             stop.setEnabled(false);
             play.setEnabled(true);
-            Toast.makeText(this,"녹음이 중지되었습니다.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"녹음이 저장되었습니다.",Toast.LENGTH_SHORT).show();
+
+            myRecord = new MyRecord(filename);
+
 
         }
         else
@@ -140,6 +142,23 @@ public class AddRecordActivity extends AppCompatActivity
             //재생 버튼 눌렀을 떄
             startplay();
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+//        super.onBackPressed();
+          if(myRecord == null) //음성녹음 버튼을 누르지 않았을 경우
+          {
+              finish();
+          }
+          else
+          {
+              Intent intent = getIntent();
+              intent.putExtra("newrec",myRecord);
+              setResult(RESULT_OK,intent);
+              finish();
+          }
     }
 
     public void startplay()

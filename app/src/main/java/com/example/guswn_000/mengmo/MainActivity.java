@@ -1,6 +1,7 @@
 package com.example.guswn_000.mengmo;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,15 +12,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -28,6 +33,10 @@ public class MainActivity extends AppCompatActivity
     boolean isaddbtnvisible = false;
     ImageButton btnadd,btntext,btnimg,btnrec;
     ListView txtlistview,imglistview,reclistview;
+    ArrayList<MyRecord> records = new ArrayList<>();
+    RecordAdapter recordAdapter;
+
+    final int NEW_RECORD = 20;
 
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
@@ -38,12 +47,12 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("맹모장");
         int requestCode = 200;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             requestPermissions(permissions,requestCode);
         }
-//        checkpermission();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,8 +77,73 @@ public class MainActivity extends AppCompatActivity
         txtlistview = (ListView)findViewById(R.id.listviewtxt);
         imglistview = (ListView)findViewById(R.id.listviewimg);
         reclistview = (ListView)findViewById(R.id.listviewrec);
+        recordAdapter = new RecordAdapter(this,records);
+        reclistview.setAdapter(recordAdapter);
+        reclistsetting();
+        recfilelist();
+
 
     }
+
+    public void recfilelist() //음성녹음 파일을 리스트에 넣는다
+    {
+        File[] recfiles = new File(getExternalPath() + "Mengmo").listFiles();
+        records.clear();
+        if(recfiles != null)
+        {
+            for (File f : recfiles)
+            {
+
+                if(f.getName().contains("Rec.mp4"))
+                {
+                    records.add(new MyRecord(f.getName()));
+                }
+            }
+        }
+        recSort();
+        recordAdapter.notifyDataSetChanged();
+    }
+
+    public void recSort() //음성녹음 리스트 이름순 정렬
+    {
+        recordAdapter.sortRecordAsc();
+    }
+
+    public void reclistsetting() //음성녹음 리스트뷰에 아이템클릭, 롱클릭 리스너 달기
+    {
+        reclistview.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                Intent intent = new Intent(MainActivity.this,ShowRecordActivity.class);
+                intent.putExtra("Record",records.get(position).getTitle());
+                startActivity(intent);
+            }
+        });
+        reclistview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
+            {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(view.getContext());
+                dlg.setTitle("삭제 확인")
+                        .setMessage("선택한 음성녹음을 정말 삭제하시겠습니까?")
+                        .setNegativeButton("취소",null)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                remove(getExternalPath() + "Mengmo/" + records.get(position).getTitle());
+                                recfilelist();
+                            }
+                        })
+                        .show();
+                return true;
+            }
+        });
+    }
+
 
     public void onClick(View v)
     {
@@ -101,7 +175,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.btnrecordadd:
                 Intent intentrec = new Intent(MainActivity.this,AddRecordActivity.class);
-                startActivity(intentrec);
+                startActivityForResult(intentrec,NEW_RECORD);
 
                 break;
         }
@@ -155,16 +229,31 @@ public class MainActivity extends AppCompatActivity
         if(ext.equals(Environment.MEDIA_MOUNTED))
         {
             sdPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
-            //sdPath = "mnt/sdcard/";
         }
         else
         {
             sdPath = getFilesDir() + "";
         }
-//        Toast.makeText(getApplicationContext(),sdPath,Toast.LENGTH_SHORT).show();
         return sdPath;
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NEW_RECORD)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                recfilelist();
+            }
+        }
+    }
 
+
+    public void remove(String path)
+    {
+        File file = new File(path);
+        file.delete();
+    }
 }

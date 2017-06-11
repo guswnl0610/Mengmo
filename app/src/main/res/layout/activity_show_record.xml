@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.example.guswn_000.mengmo.ShowRecordActivity">
+
+    <TextView
+        android:id="@+id/showrectv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Title"
+        android:paddingBottom="30dp"/>
+
+    <SeekBar
+        android:id="@+id/showrecseekbar"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:paddingTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:onClick="onClick"
+            android:id="@+id/showrecplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:paddingRight="40dp"
+            app:srcCompat="@drawable/recplay" />
+
+        <ImageButton
+            android:onClick="onClick"
+            android:id="@+id/showrecpause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:paddingRight="40dp"
+            app:srcCompat="@drawable/recpause" />
+
+        <ImageButton
+            android:onClick="onClick"
+            android:id="@+id/showrecstop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/recstop" />
+    </LinearLayout>
+</LinearLayout>

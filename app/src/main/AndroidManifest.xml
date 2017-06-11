@@ -29,7 +29,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddTextActivity" />
         <activity android:name=".AddPaintActivity" />
-        <activity android:name=".AddRecordActivity"></activity>
+        <activity android:name=".AddRecordActivity" />
+        <activity android:name=".ShowRecordActivity"></activity>
     </application>
 
 </manifest>
