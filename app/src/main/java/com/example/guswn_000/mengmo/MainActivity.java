@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     final int NEW_RECORD = 20;
     final int NEW_TEXT = 21;
     final int NEW_IMAGE = 22;
+    final int SHOW_TEXT = 23;
 
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         textAdapter = new TextAdapter(this,texts);
         txtlistview.setAdapter(textAdapter);
         txtfilelist();
-
+        txtlistSetting();
 
     }
 
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent intent = new Intent(MainActivity.this,ShowRecordActivity.class);
                 intent.putExtra("Record",records.get(position).getTitle());
+
                 startActivity(intent);
             }
         });
@@ -174,6 +176,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Intent showtxt = new Intent(MainActivity.this,ShowTextActivity.class);
+                showtxt.putExtra("TEXT",texts.get(position).getTitle());
+                startActivityForResult(showtxt,SHOW_TEXT);
             }
         });
 
@@ -317,6 +322,14 @@ public class MainActivity extends AppCompatActivity
         else if (requestCode == NEW_IMAGE)
         {
 
+        }
+        else if (requestCode == SHOW_TEXT)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                MyText newtxt = data.getParcelableExtra("showtxt");
+                txtfilelist();
+            }
         }
     }
 

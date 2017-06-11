@@ -25,8 +25,6 @@ public class ShowRecordActivity extends AppCompatActivity implements MediaPlayer
     private final int PLAY_PAUSE = 2;
     private int playerstate = PLAY_STOP;
     private String filename,filepath;
-    private int mCurRecTimeMs = 0;
-    private int mCurProgressTimeDisplay = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
