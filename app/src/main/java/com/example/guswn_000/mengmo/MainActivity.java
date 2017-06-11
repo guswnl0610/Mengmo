@@ -35,8 +35,12 @@ public class MainActivity extends AppCompatActivity
     ListView txtlistview,imglistview,reclistview;
     ArrayList<MyRecord> records = new ArrayList<>();
     RecordAdapter recordAdapter;
+    ArrayList<MyText> texts = new ArrayList<>();
+    TextAdapter textAdapter;
 
     final int NEW_RECORD = 20;
+    final int NEW_TEXT = 21;
+    final int NEW_IMAGE = 22;
 
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
@@ -81,6 +85,9 @@ public class MainActivity extends AppCompatActivity
         reclistview.setAdapter(recordAdapter);
         reclistsetting();
         recfilelist();
+        textAdapter = new TextAdapter(this,texts);
+        txtlistview.setAdapter(textAdapter);
+        txtfilelist();
 
 
     }
@@ -93,7 +100,6 @@ public class MainActivity extends AppCompatActivity
         {
             for (File f : recfiles)
             {
-
                 if(f.getName().contains("Rec.mp4"))
                 {
                     records.add(new MyRecord(f.getName()));
@@ -102,6 +108,24 @@ public class MainActivity extends AppCompatActivity
         }
         recSort();
         recordAdapter.notifyDataSetChanged();
+    }
+
+    public void txtfilelist()
+    {
+        File[] txtfiles = new File(getExternalPath() + "Mengmo").listFiles();
+        texts.clear();
+        if(txtfiles != null)
+        {
+            for (File f : txtfiles)
+            {
+                if(f.getName().contains(".txt"))
+                {
+                    texts.add(new MyText(f.getName()));
+                    //이전에 만들어둔 텍스트들 읽어올 때에 내용, 날짜는 db를 통해서 가져와야할듯
+                }
+            }
+        }
+        textAdapter.notifyDataSetChanged();
     }
 
     public void recSort() //음성녹음 리스트 이름순 정렬
@@ -144,6 +168,37 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void txtlistSetting()
+    {
+        txtlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
+        txtlistview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,final int position, long id)
+            {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(view.getContext());
+                dlg.setTitle("삭제 확인")
+                        .setMessage("선택한 메모를 삭제하시겠습니까?")
+                        .setNegativeButton("취소",null)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                remove(getExternalPath() + "Mengmo/" + texts.get(position).getTitle());
+                                txtfilelist();
+                            }
+                        })
+                        .show();
+                return true;
+            }
+        });
+    }
+
 
     public void onClick(View v)
     {
@@ -167,7 +222,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.btntextadd:
                 Intent intenttxt = new Intent(MainActivity.this,AddTextActivity.class);
-                startActivity(intenttxt);
+//                startActivity(intenttxt);
+                startActivityForResult(intenttxt,NEW_TEXT);
                 break;
             case R.id.btnimgadd:
                 Intent intentimg = new Intent(MainActivity.this,AddPaintActivity.class);
@@ -247,6 +303,20 @@ public class MainActivity extends AppCompatActivity
             {
                 recfilelist();
             }
+        }
+        else if (requestCode == NEW_TEXT)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                MyText mytxt = data.getParcelableExtra("newtxt");
+//                texts.add(mytxt);
+//                textAdapter.sortTextDsc();
+                txtfilelist();
+            }
+        }
+        else if (requestCode == NEW_IMAGE)
+        {
+
         }
     }
 

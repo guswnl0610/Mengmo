@@ -1,6 +1,8 @@
 package com.example.guswn_000.mengmo;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,10 +13,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class AddTextActivity extends AppCompatActivity
 {
     EditText title, content;
-
+    MyText myText;
+    String txttitle;
+    String txtcontent;
+    String txtdate;
+    String filepath,filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,6 +81,21 @@ public class AddTextActivity extends AppCompatActivity
                 }
                 else
                 {
+                    txttitle = title.getText().toString().trim();
+                    txtcontent = content.getText().toString();
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                    txtdate = dateFormat.format(date).toString();
+                    myText = new MyText(txttitle,txtcontent,txtdate);
+                    filepath = getExternalPath() + "Mengmo/" + txttitle + ".txt";
+                    filename = txttitle+".txt";
+                    write(filepath,txtcontent);
+
+                    Intent intent = getIntent();
+                    intent.putExtra("newtxt",myText);
+                    setResult(RESULT_OK,intent);
+
                     finish();
                     /*
 
@@ -77,6 +104,8 @@ public class AddTextActivity extends AppCompatActivity
 
 
                      */
+
+
                 }
 
                 break;
@@ -84,6 +113,23 @@ public class AddTextActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void write(String path,String content)
+    {
+        try
+        {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path,true));
+            bw.write(content);
+            bw.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     public void onBackPressed()
@@ -120,4 +166,20 @@ public class AddTextActivity extends AppCompatActivity
                 .setNegativeButton("취소",null)
                 .show();
     }
+
+    public String getExternalPath()
+    {
+        String sdPath = "";
+        String ext = Environment.getExternalStorageState();
+        if(ext.equals(Environment.MEDIA_MOUNTED))
+        {
+            sdPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+        }
+        else
+        {
+            sdPath = getFilesDir() + "";
+        }
+        return sdPath;
+    }
+
 }

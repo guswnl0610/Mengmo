@@ -17,7 +17,7 @@
             android:src="@drawable/listimg" />
 
         <TextView
-            android:id="@+id/txttitle"
+            android:id="@+id/imgtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="30dp"
