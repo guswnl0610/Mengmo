@@ -107,6 +107,7 @@ public class ShowTextActivity extends AppCompatActivity
                     //저장
                     Intent intent2 = getIntent();
                     intent2.putExtra("showtxt",myText);
+                    intent2.putExtra("originpath",originpath);
                     setResult(RESULT_OK,intent2);
 
                     finish();

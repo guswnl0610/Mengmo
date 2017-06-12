@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity
     ArrayList<MyImage> images = new ArrayList<>();
     ImageAdapter imageAdapter;
 
-    MyManageDB manageDB;
-
     final int NEW_RECORD = 20;
     final int NEW_TEXT = 21;
     final int NEW_IMAGE = 22;
@@ -55,6 +53,9 @@ public class MainActivity extends AppCompatActivity
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
     private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+    private DbOpenHelper mDbOpenHelper;
+    private Cursor mCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -81,7 +82,9 @@ public class MainActivity extends AppCompatActivity
         File txtdir = new File(path + "Mengmo/txt");
         txtdir.mkdir();
 
-        manageDB = MyManageDB.getmInstance(this);
+        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+
         init();
         initlistviews();
     }
@@ -110,19 +113,36 @@ public class MainActivity extends AppCompatActivity
         recordAdapter = new RecordAdapter(this,records);
         reclistview.setAdapter(recordAdapter);
         reclistsetting();
-        recfilelist();
+//        recfilelist();
+        doWhileCursorrecords();
         textAdapter = new TextAdapter(this,texts);
         txtlistview.setAdapter(textAdapter);
-        txtfilelist();
+//        txtfilelist();
         txtlistSetting();
+        doWhileCursortexts();
         imageAdapter = new ImageAdapter(this,images);
         imglistview.setAdapter(imageAdapter);
         imgfilelist();
         imglistSetting();
     }
 
-    public void recfilelist() //음성녹음 파일을 리스트에 넣는다
+    public void doWhileCursorrecords() //음성녹음 파일의 경로를 받아와서 리스트뷰에 추가한다
     {
+        records.clear();
+        mCursor = null;
+        mCursor = mDbOpenHelper.getAllrecpath();
+        while (mCursor.moveToNext())
+        {
+            File f = new File(mCursor.getString(mCursor.getColumnIndex("path")));
+            MyRecord rec = new MyRecord(f.getName(),f.getName().substring(0,14));
+            records.add(rec);
+            recordAdapter.notifyDataSetChanged();
+        }
+        mCursor.close();
+    }
+
+//    public void recfilelist() //음성녹음 파일을 리스트에 넣는다
+//    {
 //        File[] recfiles = new File(getExternalPath() + "Mengmo/rec").listFiles();
 //        records.clear();
 //        if(recfiles != null)
@@ -137,42 +157,27 @@ public class MainActivity extends AppCompatActivity
 //        }
 //        recSort();
 //        recordAdapter.notifyDataSetChanged();
-        //여기까지 정상적으로 되던거
+//        //여기까지 정상적으로 되던거
+//    }
 
-
-//        records.clear();
-//        if(recfiles != null)
-//        {
-////            records.clear();
-//            String sql = "Select * from records order by date desc;";
-//            Cursor cursor = manageDB.execSELECTquery(sql);
-//            cursor.moveToFirst();
-//            do
-//            {
-//                String str = "";
-//                str += cursor.getInt(0)+"";
-//                records.add(new MyRecord(cursor.getString(1),cursor.getString(2)));
-//                recordAdapter.notifyDataSetChanged();
-//            }
-//            while (cursor.moveToNext());
-//            cursor.close();
-//        }
-
-        records.clear();
-        String sql = "Select path from recordpath order by path desc;";
-        Cursor cursor = manageDB.execSELECTquery(sql);
-        cursor.moveToFirst();
-        while (cursor.moveToNext())
+    public void doWhileCursortexts() //텍스트메모 파일의 경로를 받아와서 리스트뷰에 추가한다
+    {
+        texts.clear();
+        mCursor = null;
+        mCursor = mDbOpenHelper.getAlltxtpath();
+        while (mCursor.moveToNext())
         {
-            String path = cursor.getString(cursor.getColumnIndex("path"));
-            File f = new File(path);
-            records.add(new MyRecord(f.getName(),f.getName().substring(0,14)));
+            File f = new File(mCursor.getString(mCursor.getColumnIndex("path")));
+//            MyRecord rec = new MyRecord(f.getName(),f.getName().substring(0,14));
+//            records.add(rec);
+//            recordAdapter.notifyDataSetChanged();
+            MyText txt = new MyText(f.getName().substring(14,f.getName().length()),f.getName().substring(0,14));
+            texts.add(txt);
+            textAdapter.notifyDataSetChanged();
         }
-        cursor.close();
-        recSort();
-        recordAdapter.notifyDataSetChanged();
-
+        mCursor.close();
     }
+
 
     public void txtfilelist()
     {
@@ -244,8 +249,11 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                remove(getExternalPath() + "Mengmo/rec/" + records.get(position).getTitle());
-                                recfilelist();
+                                String path = getExternalPath() + "Mengmo/rec/" + records.get(position).getTitle();
+                                mDbOpenHelper.deleterecpath(path);
+                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_SHORT).show();
+                                remove(path);
+                                doWhileCursorrecords();
                             }
                         })
                         .show();
@@ -278,8 +286,12 @@ public class MainActivity extends AppCompatActivity
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                remove(getExternalPath() + "Mengmo/txt/" + texts.get(position).getTitle());
-                                txtfilelist();
+
+                                String path = getExternalPath() + "Mengmo/txt/" + texts.get(position).getDate() + texts.get(position).getTitle();
+                                mDbOpenHelper.deletetxtpath(path);
+                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_LONG).show();
+                                remove(path);
+                                doWhileCursortexts();
                             }
                         })
                         .show();
@@ -441,10 +453,12 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK)
             {
                 MyRecord myRecord = data.getParcelableExtra("newrec");
-                manageDB.INSERTrecpath(getExternalPath() + "Mengmo/rec/" + myRecord.getTitle());
-//                manageDB.INSERTrecords(myRecord.getTitle(),myRecord.getDate());
+                mDbOpenHelper.INSERTrecpath(getExternalPath() +"Mengmo/rec/" + myRecord.getTitle());
+                Toast.makeText(this,getExternalPath()+"Mengmo/rec/"+myRecord.getTitle(),Toast.LENGTH_SHORT).show();
 
-                recfilelist();
+//                recfilelist();
+                doWhileCursorrecords();
+                mCursor.close();
             }
         }
         else if (requestCode == NEW_TEXT)
@@ -452,9 +466,11 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK)
             {
                 MyText mytxt = data.getParcelableExtra("newtxt");
-//                texts.add(mytxt);
-//                textAdapter.sortTextDsc();
-                txtfilelist();
+                mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle()+".txt");
+                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle()+".txt",Toast.LENGTH_LONG).show();
+//                txtfilelist();
+                doWhileCursortexts();
+                mCursor.close();
             }
         }
         else if (requestCode == NEW_IMAGE)
@@ -470,7 +486,15 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK)
             {
                 MyText newtxt = data.getParcelableExtra("showtxt");
-                txtfilelist();
+                String originpath = data.getStringExtra("originpath");
+                mDbOpenHelper.deletetxtpath(originpath); //DB에서 기존파일경로를 삭제하고
+                //새로운 파일의 경로를 추가한다
+                mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle() + ".txt");
+                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle()+".txt",Toast.LENGTH_LONG).show();
+//
+                doWhileCursortexts();
+                mCursor.close();
+//                txtfilelist();
             }
         }
         else if (requestCode == SHOW_IMG)
