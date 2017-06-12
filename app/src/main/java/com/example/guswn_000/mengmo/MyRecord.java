@@ -10,6 +10,12 @@ import android.os.Parcelable;
 public class MyRecord implements Parcelable
 {
     private String title;
+    private String date;
+
+    public MyRecord(String title, String date) {
+        this.title = title;
+        this.date = date;
+    }
 
     public MyRecord(String title) {
         this.title = title;
@@ -17,6 +23,7 @@ public class MyRecord implements Parcelable
 
     protected MyRecord(Parcel in) {
         title = in.readString();
+        date = in.readString();
     }
 
     public static final Creator<MyRecord> CREATOR = new Creator<MyRecord>() {
@@ -30,16 +37,6 @@ public class MyRecord implements Parcelable
             return new MyRecord[size];
         }
     };
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
-        dest.writeString(title);
-    }
 
     public String getTitle() {
         return title;
@@ -49,4 +46,22 @@ public class MyRecord implements Parcelable
         this.title = title;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(date);
+    }
 }

@@ -18,6 +18,11 @@ public class MyText implements Parcelable
         this.title = title;
     }
 
+    public MyText(String title, String date) {
+        this.title = title;
+        this.date = date;
+    }
+
     public MyText(String title, String content, String date) {
         this.title = title;
         this.content = content;

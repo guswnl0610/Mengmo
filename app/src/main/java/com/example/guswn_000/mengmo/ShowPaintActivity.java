@@ -16,6 +16,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ShowPaintActivity extends AppCompatActivity
 {
     EditText titleet;
@@ -32,10 +35,11 @@ public class ShowPaintActivity extends AppCompatActivity
         mypainter = (Mypainter)findViewById(R.id.mapainter);
         imageView = (ImageView)findViewById(R.id.Openimgview);
         Intent intent = getIntent();
-        originfilename = intent.getStringExtra("ShowImg");
-        originfilepath = getExternalPath() + "Mengmo/" + originfilename;
+        MyImage originimg = intent.getParcelableExtra("ShowImg");
+        originfilename = originimg.getDate() + originimg.getTitle();
+        originfilepath = getExternalPath() + "Mengmo/img/" + originfilename;
         Toast.makeText(this,originfilepath,Toast.LENGTH_SHORT).show();
-        titleet.setText(originfilename.substring(0,originfilename.length()-4));
+        titleet.setText(originfilename.substring(14,originfilename.length()-4));
 
 //        Bitmap temp = BitmapFactory.decodeFile(originfilepath);
 //        mypainter.mcanvas.drawBitmap(temp,0,0,null);
@@ -70,10 +74,26 @@ public class ShowPaintActivity extends AppCompatActivity
                 }
                 else
                 {
+
+
+
+//                    String filename = titleet.getText().toString().trim() + ".png";
+//                    MyImage img = new MyImage(filename,filedate);
+//                    mypainter.Save(getExternalPath() + "Mengmo/img/" + filedate + filename);
+//                    Intent intent = getIntent();
+//                    intent.putExtra("addimg",img);
+//                    setResult(RESULT_OK,intent);
+//                    finish();
+
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                    String filedate = dateFormat.format(date).toString();
+
                     String filename = titleet.getText().toString().trim() + ".png";
-                    MyImage img = new MyImage(filename);
+                    MyImage img = new MyImage(filename,filedate);
                     mypainter.Remove(originfilepath);
-                    mypainter.Save(getExternalPath() + "Mengmo/" + filename);
+                    mypainter.Save(getExternalPath() + "Mengmo/img/" + filedate + filename);
                     Intent intent = getIntent();
                     intent.putExtra("shownewimg",img);
                     setResult(RESULT_OK,intent);

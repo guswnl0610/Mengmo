@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by guswn_000 on 2017-06-11.
@@ -53,6 +55,19 @@ public class ImageAdapter extends BaseAdapter
         txt.setText(datalist.get(position).getTitle());
 
         return convertView;
+    }
+
+    Comparator<MyImage> imgdateDsc = new Comparator<MyImage>() {
+        @Override
+        public int compare(MyImage o1, MyImage o2) {
+            return o2.getDate().compareTo(o1.getDate());
+        }
+    };
+
+    public void sortImgDsc()
+    {
+        Collections.sort(datalist,imgdateDsc);
+        this.notifyDataSetChanged();
     }
 
 

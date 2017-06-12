@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity
     ArrayList<MyImage> images = new ArrayList<>();
     ImageAdapter imageAdapter;
 
+    MyManageDB manageDB;
+
     final int NEW_RECORD = 20;
     final int NEW_TEXT = 21;
     final int NEW_IMAGE = 22;
@@ -67,15 +70,28 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        btnadd = (ImageButton)findViewById(R.id.btnadd);
-        btntext = (ImageButton)findViewById(R.id.btntextadd);
-        btnimg = (ImageButton)findViewById(R.id.btnimgadd);
-        btnrec = (ImageButton)findViewById(R.id.btnrecordadd);
 
         String path = getExternalPath();
         File file = new File(path + "Mengmo");
         file.mkdir();
+        File recdir = new File(path + "Mengmo/rec");
+        recdir.mkdir();
+        File imgdir = new File(path + "Mengmo/img");
+        imgdir.mkdir();
+        File txtdir = new File(path + "Mengmo/txt");
+        txtdir.mkdir();
 
+        manageDB = MyManageDB.getmInstance(this);
+        init();
+        initlistviews();
+    }
+
+    public void init()
+    {
+        btnadd = (ImageButton)findViewById(R.id.btnadd);
+        btntext = (ImageButton)findViewById(R.id.btntextadd);
+        btnimg = (ImageButton)findViewById(R.id.btnimgadd);
+        btnrec = (ImageButton)findViewById(R.id.btnrecordadd);
         tabHost = (TabHost)findViewById(R.id.tabhost);
         tabHost.setup();
         TabHost.TabSpec ts1 = tabHost.newTabSpec("TXT").setContent(R.id.tab1).setIndicator("Text");
@@ -84,7 +100,10 @@ public class MainActivity extends AppCompatActivity
         tabHost.addTab(ts2);
         TabHost.TabSpec ts3 = tabHost.newTabSpec("REC").setContent(R.id.tab3).setIndicator("Record");
         tabHost.addTab(ts3);
+    }
 
+    public void initlistviews()
+    {
         txtlistview = (ListView)findViewById(R.id.listviewtxt);
         imglistview = (ListView)findViewById(R.id.listviewimg);
         reclistview = (ListView)findViewById(R.id.listviewrec);
@@ -104,7 +123,7 @@ public class MainActivity extends AppCompatActivity
 
     public void recfilelist() //음성녹음 파일을 리스트에 넣는다
     {
-        File[] recfiles = new File(getExternalPath() + "Mengmo").listFiles();
+        File[] recfiles = new File(getExternalPath() + "Mengmo/rec").listFiles();
         records.clear();
         if(recfiles != null)
         {
@@ -118,11 +137,28 @@ public class MainActivity extends AppCompatActivity
         }
         recSort();
         recordAdapter.notifyDataSetChanged();
+//        records.clear();
+//        if(recfiles != null)
+//        {
+////            records.clear();
+//            String sql = "Select * from records order by date desc;";
+//            Cursor cursor = manageDB.execSELECTquery(sql);
+//            cursor.moveToFirst();
+//            do
+//            {
+//                String str = "";
+//                str += cursor.getInt(0)+"";
+//                records.add(new MyRecord(cursor.getString(1),cursor.getString(2)));
+//                recordAdapter.notifyDataSetChanged();
+//            }
+//            while (cursor.moveToNext());
+//            cursor.close();
+//        }
     }
 
     public void txtfilelist()
     {
-        File[] txtfiles = new File(getExternalPath() + "Mengmo").listFiles();
+        File[] txtfiles = new File(getExternalPath() + "Mengmo/txt").listFiles();
         texts.clear();
         if(txtfiles != null)
         {
@@ -130,17 +166,18 @@ public class MainActivity extends AppCompatActivity
             {
                 if(f.getName().contains(".txt"))
                 {
-                    texts.add(new MyText(f.getName()));
+                    texts.add(new MyText(f.getName().substring(14,f.getName().length()), f.getName().substring(0,14)));
                     //이전에 만들어둔 텍스트들 읽어올 때에 내용, 날짜는 db를 통해서 가져와야할듯
                 }
             }
         }
+        textAdapter.sortTextDsc();
         textAdapter.notifyDataSetChanged();
     }
 
     public void imgfilelist()
     {
-        File[] imgfiles = new File(getExternalPath() + "Mengmo").listFiles();
+        File[] imgfiles = new File(getExternalPath() + "Mengmo/img").listFiles();
         images.clear();
         if(imgfiles != null)
         {
@@ -148,10 +185,13 @@ public class MainActivity extends AppCompatActivity
             {
                 if(f.getName().contains(".png"))
                 {
-                    images.add(new MyImage(f.getName()));
+//                    images.add(new MyImage(f.getName()));
+                    images.add(new MyImage(f.getName().substring(14,f.getName().length()) , f.getName().substring(0,14)));
+
                 }
             }
         }
+        imageAdapter.sortImgDsc();
         imageAdapter.notifyDataSetChanged();
     }
 
@@ -186,7 +226,7 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                remove(getExternalPath() + "Mengmo/" + records.get(position).getTitle());
+                                remove(getExternalPath() + "Mengmo/rec/" + records.get(position).getTitle());
                                 recfilelist();
                             }
                         })
@@ -203,7 +243,7 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent showtxt = new Intent(MainActivity.this,ShowTextActivity.class);
-                showtxt.putExtra("TEXT",texts.get(position).getTitle());
+                showtxt.putExtra("TEXT",texts.get(position));
                 startActivityForResult(showtxt,SHOW_TEXT);
             }
         });
@@ -220,7 +260,7 @@ public class MainActivity extends AppCompatActivity
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                remove(getExternalPath() + "Mengmo/" + texts.get(position).getTitle());
+                                remove(getExternalPath() + "Mengmo/txt/" + texts.get(position).getTitle());
                                 txtfilelist();
                             }
                         })
@@ -237,7 +277,7 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 Intent intent = new Intent(MainActivity.this,ShowPaintActivity.class);
-                intent.putExtra("ShowImg",images.get(position).getTitle());
+                intent.putExtra("ShowImg",images.get(position));
                 startActivityForResult(intent,SHOW_IMG);
             }
         });
@@ -252,7 +292,7 @@ public class MainActivity extends AppCompatActivity
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                remove(getExternalPath() + "Mengmo/" + images.get(position).getTitle());
+                                remove(getExternalPath() + "Mengmo/img/" + images.get(position).getTitle());
                                 imgfilelist();
                             }
                         })
@@ -382,6 +422,8 @@ public class MainActivity extends AppCompatActivity
         {
             if(resultCode == RESULT_OK)
             {
+                MyRecord myRecord = data.getParcelableExtra("newrec");
+                manageDB.INSERTrecords(myRecord.getTitle(),myRecord.getDate());
                 recfilelist();
             }
         }

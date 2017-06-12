@@ -39,7 +39,7 @@ public class ShowRecordActivity extends AppCompatActivity implements MediaPlayer
         Intent intent = getIntent();
         filename = intent.getStringExtra("Record");
         textView.setText(filename);
-        filepath = getExternalPath() + "Mengmo/" + filename;
+        filepath = getExternalPath() + "Mengmo/rec/" + filename;
 
 
 

@@ -88,7 +88,7 @@ public class AddTextActivity extends AppCompatActivity
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                     txtdate = dateFormat.format(date).toString();
                     myText = new MyText(txttitle,txtcontent,txtdate);
-                    filepath = getExternalPath() + "Mengmo/" + txttitle + ".txt";
+                    filepath = getExternalPath() + "Mengmo/txt/" +txtdate + txttitle + ".txt";
                     filename = txttitle+".txt";
                     write(filepath,txtcontent);
 

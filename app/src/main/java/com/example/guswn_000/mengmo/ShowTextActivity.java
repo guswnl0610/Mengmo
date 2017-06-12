@@ -37,10 +37,12 @@ public class ShowTextActivity extends AppCompatActivity
         titleet = (EditText) findViewById(R.id.showtxttitle);
         contentet = (EditText)findViewById(R.id.showtxtcontent);
         Intent intent = getIntent();
-        String origintitle = intent.getStringExtra("TEXT");
+        MyText origintxt = intent.getParcelableExtra("TEXT");
+        String origintitle = origintxt.getTitle();
+        String origindate = origintxt.getDate();
 
 
-        originpath = getExternalPath() + "Mengmo/" + origintitle;
+        originpath = getExternalPath() + "Mengmo/txt/" + origindate + origintitle;
         int point = origintitle.length();
         titleet.setText(origintitle.substring(0,point-4));
         read(originpath);
@@ -97,7 +99,7 @@ public class ShowTextActivity extends AppCompatActivity
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                     String newdate = dateFormat.format(date).toString();
                     MyText myText = new MyText(newtitle,newcontent,newdate);
-                    String newpath = getExternalPath() + "Mengmo/" + newtitle + ".txt";
+                    String newpath = getExternalPath() + "Mengmo/txt/" +newdate + newtitle + ".txt";
                     String newfilename = newtitle + ".txt";
 
                     remove(originpath);

@@ -19,7 +19,7 @@ import java.util.Date;
 
 public class AddRecordActivity extends AppCompatActivity
 {
-    String filepath,filename;
+    String filepath,filename,filedate;
     MediaRecorder recorder = null;
     MediaPlayer player = null;
     ImageButton start,stop,play;
@@ -94,8 +94,9 @@ public class AddRecordActivity extends AppCompatActivity
             long now = System.currentTimeMillis();
             Date date = new Date(now);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            filepath = getExternalPath() + "Mengmo/"+dateFormat.format(date).toString()+"Rec.mp4";
+            filepath = getExternalPath() + "Mengmo/rec/"+dateFormat.format(date).toString()+"Rec.mp4";
             filename = dateFormat.format(date).toString()+"Rec.mp4";
+            filedate = dateFormat.format(date).toString();
             //녹음버튼 눌렀을 때
             start.setEnabled(false);
             stop.setEnabled(true);
@@ -131,7 +132,8 @@ public class AddRecordActivity extends AppCompatActivity
             play.setEnabled(true);
             Toast.makeText(this,"녹음이 저장되었습니다.",Toast.LENGTH_SHORT).show();
 
-            myRecord = new MyRecord(filename);
+//            myRecord = new MyRecord(filename);
+            myRecord = new MyRecord(filename,filedate);
 
 
         }

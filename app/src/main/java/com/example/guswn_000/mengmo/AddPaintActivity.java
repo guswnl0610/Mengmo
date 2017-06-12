@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class AddPaintActivity extends AppCompatActivity
 {
     EditText titleet;
@@ -51,16 +54,26 @@ public class AddPaintActivity extends AppCompatActivity
                 }
                 else
                 {
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                    String filedate = dateFormat.format(date).toString();
+
                     String filename = titleet.getText().toString().trim() + ".png";
-                    MyImage img = new MyImage(filename);
-                    mypainter.Save(getExternalPath() + "Mengmo/" + filename);
+                    MyImage img = new MyImage(filename,filedate);
+                    mypainter.Save(getExternalPath() + "Mengmo/img/" + filedate + filename);
                     Intent intent = getIntent();
                     intent.putExtra("addimg",img);
                     setResult(RESULT_OK,intent);
                     finish();
                     /*
 
-                    저장하는부분 여기에
+            long now = System.currentTimeMillis();
+            Date date = new Date(now);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            filepath = getExternalPath() + "Mengmo/rec/"+dateFormat.format(date).toString()+"Rec.mp4";
+            filename = dateFormat.format(date).toString()+"Rec.mp4";
+            filedate = dateFormat.format(date).toString();
 
                      */
                 }
