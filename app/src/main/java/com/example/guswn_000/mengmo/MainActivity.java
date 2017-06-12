@@ -123,20 +123,23 @@ public class MainActivity extends AppCompatActivity
 
     public void recfilelist() //음성녹음 파일을 리스트에 넣는다
     {
-        File[] recfiles = new File(getExternalPath() + "Mengmo/rec").listFiles();
-        records.clear();
-        if(recfiles != null)
-        {
-            for (File f : recfiles)
-            {
-                if(f.getName().contains("Rec.mp4"))
-                {
-                    records.add(new MyRecord(f.getName()));
-                }
-            }
-        }
-        recSort();
-        recordAdapter.notifyDataSetChanged();
+//        File[] recfiles = new File(getExternalPath() + "Mengmo/rec").listFiles();
+//        records.clear();
+//        if(recfiles != null)
+//        {
+//            for (File f : recfiles)
+//            {
+//                if(f.getName().contains("Rec.mp4"))
+//                {
+//                    records.add(new MyRecord(f.getName()));
+//                }
+//            }
+//        }
+//        recSort();
+//        recordAdapter.notifyDataSetChanged();
+        //여기까지 정상적으로 되던거
+
+
 //        records.clear();
 //        if(recfiles != null)
 //        {
@@ -154,6 +157,21 @@ public class MainActivity extends AppCompatActivity
 //            while (cursor.moveToNext());
 //            cursor.close();
 //        }
+
+        records.clear();
+        String sql = "Select path from recordpath order by path desc;";
+        Cursor cursor = manageDB.execSELECTquery(sql);
+        cursor.moveToFirst();
+        while (cursor.moveToNext())
+        {
+            String path = cursor.getString(cursor.getColumnIndex("path"));
+            File f = new File(path);
+            records.add(new MyRecord(f.getName(),f.getName().substring(0,14)));
+        }
+        cursor.close();
+        recSort();
+        recordAdapter.notifyDataSetChanged();
+
     }
 
     public void txtfilelist()
@@ -423,7 +441,9 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK)
             {
                 MyRecord myRecord = data.getParcelableExtra("newrec");
-                manageDB.INSERTrecords(myRecord.getTitle(),myRecord.getDate());
+                manageDB.INSERTrecpath(getExternalPath() + "Mengmo/rec/" + myRecord.getTitle());
+//                manageDB.INSERTrecords(myRecord.getTitle(),myRecord.getDate());
+
                 recfilelist();
             }
         }

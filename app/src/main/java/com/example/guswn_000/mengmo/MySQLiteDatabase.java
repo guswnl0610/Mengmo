@@ -18,16 +18,13 @@ public class MySQLiteDatabase extends SQLiteOpenHelper {
     {
         String createrec = "Create table recordpath (" +
                 "id integer primary key autoincrement," +
-                "title text not null," +
-                "date text);";
-        String createimg = "Create table images (" +
+                "path text not null);";
+        String createimg = "Create table imagepath (" +
                 "id integer primary key autoincrement," +
-                "title text not null," +
-                "date text);";
-        String createtxt = "Create table texts (" +
+                "path text not null);";
+        String createtxt = "Create table textpath (" +
                 "id integer primary key autoincrement," +
-                "title text not null," +
-                "date text);";
+                "path text not null);";
         db.execSQL(createrec);
         db.execSQL(createimg);
         db.execSQL(createtxt);
@@ -36,9 +33,9 @@ public class MySQLiteDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        String sql = "drop table if exists records";
-        String sql2 = "drop table if exists images";
-        String sql3 = "drop table if exists texts";
+        String sql = "drop table if exists recordpath";
+        String sql2 = "drop table if exists imagepath";
+        String sql3 = "drop table if exists textpath";
         onCreate(db);
     }
 }
