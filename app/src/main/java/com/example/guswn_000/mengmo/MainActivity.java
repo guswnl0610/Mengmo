@@ -50,10 +50,6 @@ public class MainActivity extends AppCompatActivity
     final int SHOW_TEXT = 23;
     final int SHOW_IMG = 24;
 
-//    private boolean permissionToRecordAccepted = false;
-//    private boolean permissionToWriteAccepted = false;
-//    private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
-
     private DbOpenHelper mDbOpenHelper;
     private Cursor mCursor;
 
@@ -64,11 +60,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle("맹모장");
 
-//        int requestCode = 200;
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-//        {
-//            requestPermissions(permissions,requestCode);
-//        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -377,22 +368,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-//    {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode)
-//        {
-//            case 200:
-//                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-//                permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-//                break;
-//        }
-//        if(!permissionToRecordAccepted) MainActivity.super.finish();
-//        if(!permissionToWriteAccepted) MainActivity.super.finish();
-//
-//    }
-
 
     public String getExternalPath()
     {
@@ -459,7 +434,7 @@ public class MainActivity extends AppCompatActivity
                 //새로운 파일의 경로를 추가한다
                 mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle());
 //                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle(),Toast.LENGTH_LONG).show();
-//
+
                 doWhileCursortexts();
                 mCursor.close();
 //                txtfilelist();
