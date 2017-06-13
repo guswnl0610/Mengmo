@@ -27,6 +27,7 @@ public class ShowTextActivity extends AppCompatActivity
 {
     EditText titleet,contentet;
     String origincontent,originpath;
+    TextView lastupdatetv;
 
 
     @Override
@@ -36,15 +37,16 @@ public class ShowTextActivity extends AppCompatActivity
         setContentView(R.layout.activity_show_text);
         titleet = (EditText) findViewById(R.id.showtxttitle);
         contentet = (EditText)findViewById(R.id.showtxtcontent);
+        lastupdatetv = (TextView)findViewById(R.id.lastdatetv);
         Intent intent = getIntent();
         MyText origintxt = intent.getParcelableExtra("TEXT");
         String origintitle = origintxt.getTitle();
         String origindate = origintxt.getDate();
 
-
         originpath = getExternalPath() + "Mengmo/txt/" + origindate + origintitle;
         int point = origintitle.length();
         titleet.setText(origintitle.substring(0,point-4));
+        lastupdatetv.setText("마지막으로 수정한 시간 : " + origindate.substring(0,4) + "년" + origindate.substring(4,6) + "월" + origindate.substring(6,8) + "일");
         read(originpath);
 
     }
