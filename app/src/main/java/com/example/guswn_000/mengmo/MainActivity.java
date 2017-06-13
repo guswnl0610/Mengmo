@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity
     final int SHOW_TEXT = 23;
     final int SHOW_IMG = 24;
 
-    private boolean permissionToRecordAccepted = false;
-    private boolean permissionToWriteAccepted = false;
-    private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
+//    private boolean permissionToRecordAccepted = false;
+//    private boolean permissionToWriteAccepted = false;
+//    private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
 
     private DbOpenHelper mDbOpenHelper;
     private Cursor mCursor;
@@ -63,15 +63,27 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("맹모장");
-        int requestCode = 200;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            requestPermissions(permissions,requestCode);
-        }
+
+//        int requestCode = 200;
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//        {
+//            requestPermissions(permissions,requestCode);
+//        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+
+        makeDirectories();
+
+        init();
+        initlistviews();
+    }
+
+    public void makeDirectories()
+    {
         String path = getExternalPath();
         File file = new File(path + "Mengmo");
         file.mkdir();
@@ -82,11 +94,6 @@ public class MainActivity extends AppCompatActivity
         File txtdir = new File(path + "Mengmo/txt");
         txtdir.mkdir();
 
-        mDbOpenHelper = new DbOpenHelper(this);
-        mDbOpenHelper.open();
-
-        init();
-        initlistviews();
     }
 
     public void init()
@@ -142,25 +149,6 @@ public class MainActivity extends AppCompatActivity
         mCursor.close();
     }
 
-//    public void recfilelist() //음성녹음 파일을 리스트에 넣는다
-//    {
-//        File[] recfiles = new File(getExternalPath() + "Mengmo/rec").listFiles();
-//        records.clear();
-//        if(recfiles != null)
-//        {
-//            for (File f : recfiles)
-//            {
-//                if(f.getName().contains("Rec.mp4"))
-//                {
-//                    records.add(new MyRecord(f.getName()));
-//                }
-//            }
-//        }
-//        recSort();
-//        recordAdapter.notifyDataSetChanged();
-//        //여기까지 정상적으로 되던거
-//    }
-
     public void doWhileCursortexts() //텍스트메모 파일의 경로를 받아와서 리스트뷰에 추가한다
     {
         texts.clear();
@@ -169,34 +157,12 @@ public class MainActivity extends AppCompatActivity
         while (mCursor.moveToNext())
         {
             File f = new File(mCursor.getString(mCursor.getColumnIndex("path")));
-//            MyRecord rec = new MyRecord(f.getName(),f.getName().substring(0,14));
-//            records.add(rec);
-//            recordAdapter.notifyDataSetChanged();
             MyText txt = new MyText(f.getName().substring(14,f.getName().length()),f.getName().substring(0,14));
             texts.add(txt);
             textAdapter.notifyDataSetChanged();
         }
         mCursor.close();
     }
-
-//    public void txtfilelist()
-//    {
-//        File[] txtfiles = new File(getExternalPath() + "Mengmo/txt").listFiles();
-//        texts.clear();
-//        if(txtfiles != null)
-//        {
-//            for (File f : txtfiles)
-//            {
-//                if(f.getName().contains(".txt"))
-//                {
-//                    texts.add(new MyText(f.getName().substring(14,f.getName().length()), f.getName().substring(0,14)));
-//                    //이전에 만들어둔 텍스트들 읽어올 때에 내용, 날짜는 db를 통해서 가져와야할듯
-//                }
-//            }
-//        }
-//        textAdapter.sortTextDsc();
-//        textAdapter.notifyDataSetChanged();
-//    }
 
 
     public void doWhileCursorimages() //텍스트메모 파일의 경로를 받아와서 리스트뷰에 추가한다
@@ -207,9 +173,6 @@ public class MainActivity extends AppCompatActivity
         while (mCursor.moveToNext())
         {
             File f = new File(mCursor.getString(mCursor.getColumnIndex("path")));
-//            MyText txt = new MyText(f.getName().substring(14,f.getName().length()),f.getName().substring(0,14));
-//            texts.add(txt);
-//            textAdapter.notifyDataSetChanged();
             MyImage img = new MyImage(f.getName().substring(14,f.getName().length()),f.getName().substring(0,14));
             images.add(img);
             imageAdapter.notifyDataSetChanged();
@@ -217,25 +180,6 @@ public class MainActivity extends AppCompatActivity
         mCursor.close();
     }
 
-    public void imgfilelist()
-    {
-        File[] imgfiles = new File(getExternalPath() + "Mengmo/img").listFiles();
-        images.clear();
-        if(imgfiles != null)
-        {
-            for (File f : imgfiles)
-            {
-                if(f.getName().contains(".png"))
-                {
-//                    images.add(new MyImage(f.getName()));
-                    images.add(new MyImage(f.getName().substring(14,f.getName().length()) , f.getName().substring(0,14)));
-
-                }
-            }
-        }
-        imageAdapter.sortImgDsc();
-        imageAdapter.notifyDataSetChanged();
-    }
 
     public void recSort() //음성녹음 리스트 이름순 정렬
     {
@@ -251,7 +195,6 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent intent = new Intent(MainActivity.this,ShowRecordActivity.class);
                 intent.putExtra("Record",records.get(position).getTitle());
-
                 startActivity(intent);
             }
         });
@@ -270,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                             {
                                 String path = getExternalPath() + "Mengmo/rec/" + records.get(position).getTitle();
                                 mDbOpenHelper.deleterecpath(path);
-                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_SHORT).show();
                                 remove(path);
                                 doWhileCursorrecords();
                             }
@@ -308,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 
                                 String path = getExternalPath() + "Mengmo/txt/" + texts.get(position).getDate() + texts.get(position).getTitle();
                                 mDbOpenHelper.deletetxtpath(path);
-                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_LONG).show();
                                 remove(path);
                                 doWhileCursortexts();
                             }
@@ -343,7 +286,7 @@ public class MainActivity extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which) {
                                 String path = getExternalPath() + "Mengmo/img/" + images.get(position).getDate() + images.get(position).getTitle();
                                 mDbOpenHelper.deleteimgpath(path); //선택한 이미지 path를 DB에서 지움
-                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_LONG).show();
                                 remove(path); //선택한 이미지 파일을 삭제
                                 doWhileCursorimages();
                             }
@@ -434,21 +377,21 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode)
-        {
-            case 200:
-                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        if(!permissionToRecordAccepted) MainActivity.super.finish();
-        if(!permissionToWriteAccepted) MainActivity.super.finish();
-
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+//    {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        switch (requestCode)
+//        {
+//            case 200:
+//                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+//                permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+//                break;
+//        }
+//        if(!permissionToRecordAccepted) MainActivity.super.finish();
+//        if(!permissionToWriteAccepted) MainActivity.super.finish();
+//
+//    }
 
 
     public String getExternalPath()
@@ -476,9 +419,8 @@ public class MainActivity extends AppCompatActivity
             {
                 MyRecord myRecord = data.getParcelableExtra("newrec");
                 mDbOpenHelper.INSERTrecpath(getExternalPath() +"Mengmo/rec/" + myRecord.getTitle());
-                Toast.makeText(this,getExternalPath()+"Mengmo/rec/"+myRecord.getTitle(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this,getExternalPath()+"Mengmo/rec/"+myRecord.getTitle(),Toast.LENGTH_SHORT).show();
 
-//                recfilelist();
                 doWhileCursorrecords();
                 mCursor.close();
             }
@@ -489,8 +431,8 @@ public class MainActivity extends AppCompatActivity
             {
                 MyText mytxt = data.getParcelableExtra("newtxt");
                 mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle());
-                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle(),Toast.LENGTH_LONG).show();
-//                txtfilelist();
+//                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle(),Toast.LENGTH_LONG).show();
+
                 doWhileCursortexts();
                 mCursor.close();
             }
@@ -501,7 +443,7 @@ public class MainActivity extends AppCompatActivity
             {
                 MyImage newimg = data.getParcelableExtra("addimg");
                 mDbOpenHelper.INSERTimgpath(getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle());
-                Toast.makeText(this,getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle(),Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle(),Toast.LENGTH_LONG).show();
                 doWhileCursorimages();
                 mCursor.close();
 //                imgfilelist();
@@ -516,7 +458,7 @@ public class MainActivity extends AppCompatActivity
                 mDbOpenHelper.deletetxtpath(originpath); //DB에서 기존파일경로를 삭제하고
                 //새로운 파일의 경로를 추가한다
                 mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle());
-                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle(),Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle(),Toast.LENGTH_LONG).show();
 //
                 doWhileCursortexts();
                 mCursor.close();
@@ -532,13 +474,12 @@ public class MainActivity extends AppCompatActivity
                 mDbOpenHelper.deleteimgpath(originimgpath);
                 mDbOpenHelper.INSERTimgpath(getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle());
 //                imgfilelist();
-                Toast.makeText(this,getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle(),Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle(),Toast.LENGTH_LONG).show();
                 doWhileCursorimages();
                 mCursor.close();
             }
         }
     }
-
 
     public void remove(String path)
     {

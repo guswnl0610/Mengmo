@@ -81,31 +81,41 @@ public class AddTextActivity extends AppCompatActivity
                 }
                 else
                 {
-//                    txttitle = title.getText().toString().trim();
-                    txttitle = title.getText().toString().trim() + ".txt";
-                    txtcontent = content.getText().toString();
+////                    txttitle = title.getText().toString().trim();
+//                    txttitle = title.getText().toString().trim() + ".txt";
+//                    txtcontent = content.getText().toString();
+////                    long now = System.currentTimeMillis();
+////                    Date date = new Date(now);
+////                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+////                    txtdate = dateFormat.format(date).toString();
+//                    myText = new MyText(txttitle,txtcontent,txtdate);
+////                    filepath = getExternalPath() + "Mengmo/txt/" +txtdate + txttitle + ".txt";
+//                    filepath = getExternalPath() + "Mengmo/txt/" + txtdate + txttitle;
+////                    filename = txttitle+".txt";
+//
+//                    write(filepath,txtcontent);
+//
+//                    Intent intent = getIntent();
+//                    intent.putExtra("newtxt",myText);
+//                    setResult(RESULT_OK,intent);
+//
+//                    finish();
+
+                    String newtitle = title.getText().toString().trim() + ".txt";
+                    String newcontent = content.getText().toString();
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-                    txtdate = dateFormat.format(date).toString();
-                    myText = new MyText(txttitle,txtcontent,txtdate);
-//                    filepath = getExternalPath() + "Mengmo/txt/" +txtdate + txttitle + ".txt";
-                    filepath = getExternalPath() + "Mengmo/txt/" + txtdate + txttitle;
-//                    filename = txttitle+".txt";
-                    write(filepath,txtcontent);
+                    String newdate = dateFormat.format(date).toString();
+                    MyText myText = new MyText(newtitle,newcontent,newdate);
+                    String newpath = getExternalPath() + "Mengmo/txt/" + newdate + newtitle;
+                    write(newpath,newcontent);
 
                     Intent intent = getIntent();
                     intent.putExtra("newtxt",myText);
                     setResult(RESULT_OK,intent);
 
                     finish();
-                    /*
-
-
-                    이 부분에 저장하는 부분 만들기
-
-
-                     */
 
 
                 }

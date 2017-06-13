@@ -26,7 +26,7 @@ import java.util.Date;
 public class ShowTextActivity extends AppCompatActivity
 {
     EditText titleet,contentet;
-    String origincontent,originpath;
+    String originpath;
     TextView lastupdatetv;
 
 
@@ -35,6 +35,7 @@ public class ShowTextActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_text);
+        setTitle("맹모장");
         titleet = (EditText) findViewById(R.id.showtxttitle);
         contentet = (EditText)findViewById(R.id.showtxtcontent);
         lastupdatetv = (TextView)findViewById(R.id.lastdatetv);
@@ -46,7 +47,7 @@ public class ShowTextActivity extends AppCompatActivity
         originpath = getExternalPath() + "Mengmo/txt/" + origindate + origintitle;
         int point = origintitle.length();
         titleet.setText(origintitle.substring(0,point-4));
-        lastupdatetv.setText("마지막으로 수정한 시간 : " + origindate.substring(0,4) + "년" + origindate.substring(4,6) + "월" + origindate.substring(6,8) + "일");
+        lastupdatetv.setText("마지막으로 수정한 날짜 : " + origindate.substring(0,4) + "년" + origindate.substring(4,6) + "월" + origindate.substring(6,8) + "일");
         read(originpath);
 
     }

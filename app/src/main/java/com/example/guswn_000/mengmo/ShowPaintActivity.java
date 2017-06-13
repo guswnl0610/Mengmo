@@ -31,6 +31,7 @@ public class ShowPaintActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_paint);
+        setTitle("맹모장");
         titleet = (EditText)findViewById(R.id.ettitle);
         mypainter = (Mypainter)findViewById(R.id.mapainter);
         imageView = (ImageView)findViewById(R.id.Openimgview);
@@ -38,13 +39,8 @@ public class ShowPaintActivity extends AppCompatActivity
         MyImage originimg = intent.getParcelableExtra("ShowImg");
         originfilename = originimg.getDate() + originimg.getTitle();
         originfilepath = getExternalPath() + "Mengmo/img/" + originfilename;
-        Toast.makeText(this,originfilepath,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,originfilepath,Toast.LENGTH_SHORT).show();
         titleet.setText(originfilename.substring(14,originfilename.length()-4));
-
-//        Bitmap temp = BitmapFactory.decodeFile(originfilepath);
-//        mypainter.mcanvas.drawBitmap(temp,0,0,null);
-
-//        mypainter.Open(originfilepath);
 
     }
 
