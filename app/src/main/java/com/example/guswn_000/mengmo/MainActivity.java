@@ -122,8 +122,9 @@ public class MainActivity extends AppCompatActivity
         doWhileCursortexts();
         imageAdapter = new ImageAdapter(this,images);
         imglistview.setAdapter(imageAdapter);
-        imgfilelist();
+//        imgfilelist();
         imglistSetting();
+        doWhileCursorimages();
     }
 
     public void doWhileCursorrecords() //음성녹음 파일의 경로를 받아와서 리스트뷰에 추가한다
@@ -178,24 +179,42 @@ public class MainActivity extends AppCompatActivity
         mCursor.close();
     }
 
+//    public void txtfilelist()
+//    {
+//        File[] txtfiles = new File(getExternalPath() + "Mengmo/txt").listFiles();
+//        texts.clear();
+//        if(txtfiles != null)
+//        {
+//            for (File f : txtfiles)
+//            {
+//                if(f.getName().contains(".txt"))
+//                {
+//                    texts.add(new MyText(f.getName().substring(14,f.getName().length()), f.getName().substring(0,14)));
+//                    //이전에 만들어둔 텍스트들 읽어올 때에 내용, 날짜는 db를 통해서 가져와야할듯
+//                }
+//            }
+//        }
+//        textAdapter.sortTextDsc();
+//        textAdapter.notifyDataSetChanged();
+//    }
 
-    public void txtfilelist()
+
+    public void doWhileCursorimages() //텍스트메모 파일의 경로를 받아와서 리스트뷰에 추가한다
     {
-        File[] txtfiles = new File(getExternalPath() + "Mengmo/txt").listFiles();
-        texts.clear();
-        if(txtfiles != null)
+        images.clear();
+        mCursor = null;
+        mCursor = mDbOpenHelper.getAllimgpath();
+        while (mCursor.moveToNext())
         {
-            for (File f : txtfiles)
-            {
-                if(f.getName().contains(".txt"))
-                {
-                    texts.add(new MyText(f.getName().substring(14,f.getName().length()), f.getName().substring(0,14)));
-                    //이전에 만들어둔 텍스트들 읽어올 때에 내용, 날짜는 db를 통해서 가져와야할듯
-                }
-            }
+            File f = new File(mCursor.getString(mCursor.getColumnIndex("path")));
+//            MyText txt = new MyText(f.getName().substring(14,f.getName().length()),f.getName().substring(0,14));
+//            texts.add(txt);
+//            textAdapter.notifyDataSetChanged();
+            MyImage img = new MyImage(f.getName().substring(14,f.getName().length()),f.getName().substring(0,14));
+            images.add(img);
+            imageAdapter.notifyDataSetChanged();
         }
-        textAdapter.sortTextDsc();
-        textAdapter.notifyDataSetChanged();
+        mCursor.close();
     }
 
     public void imgfilelist()
@@ -322,8 +341,11 @@ public class MainActivity extends AppCompatActivity
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                remove(getExternalPath() + "Mengmo/img/" + images.get(position).getTitle());
-                                imgfilelist();
+                                String path = getExternalPath() + "Mengmo/img/" + images.get(position).getDate() + images.get(position).getTitle();
+                                mDbOpenHelper.deleteimgpath(path); //선택한 이미지 path를 DB에서 지움
+                                Toast.makeText(getApplicationContext(),path,Toast.LENGTH_LONG).show();
+                                remove(path); //선택한 이미지 파일을 삭제
+                                doWhileCursorimages();
                             }
                         })
                         .show();
@@ -466,8 +488,8 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK)
             {
                 MyText mytxt = data.getParcelableExtra("newtxt");
-                mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle()+".txt");
-                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle()+".txt",Toast.LENGTH_LONG).show();
+                mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle());
+                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + mytxt.getDate() + mytxt.getTitle(),Toast.LENGTH_LONG).show();
 //                txtfilelist();
                 doWhileCursortexts();
                 mCursor.close();
@@ -478,7 +500,11 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK)
             {
                 MyImage newimg = data.getParcelableExtra("addimg");
-                imgfilelist();
+                mDbOpenHelper.INSERTimgpath(getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle());
+                Toast.makeText(this,getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle(),Toast.LENGTH_LONG).show();
+                doWhileCursorimages();
+                mCursor.close();
+//                imgfilelist();
             }
         }
         else if (requestCode == SHOW_TEXT)
@@ -489,8 +515,8 @@ public class MainActivity extends AppCompatActivity
                 String originpath = data.getStringExtra("originpath");
                 mDbOpenHelper.deletetxtpath(originpath); //DB에서 기존파일경로를 삭제하고
                 //새로운 파일의 경로를 추가한다
-                mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle() + ".txt");
-                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle()+".txt",Toast.LENGTH_LONG).show();
+                mDbOpenHelper.INSERTtxtpath(getExternalPath() + "Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle());
+                Toast.makeText(this,getExternalPath()+"Mengmo/txt/" + newtxt.getDate() + newtxt.getTitle(),Toast.LENGTH_LONG).show();
 //
                 doWhileCursortexts();
                 mCursor.close();
@@ -502,7 +528,13 @@ public class MainActivity extends AppCompatActivity
             if(resultCode == RESULT_OK)
             {
                 MyImage newimg = data.getParcelableExtra("shownewimg");
-                imgfilelist();
+                String originimgpath = data.getStringExtra("Originimgpath");
+                mDbOpenHelper.deleteimgpath(originimgpath);
+                mDbOpenHelper.INSERTimgpath(getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle());
+//                imgfilelist();
+                Toast.makeText(this,getExternalPath() + "Mengmo/img/" + newimg.getDate() + newimg.getTitle(),Toast.LENGTH_LONG).show();
+                doWhileCursorimages();
+                mCursor.close();
             }
         }
     }

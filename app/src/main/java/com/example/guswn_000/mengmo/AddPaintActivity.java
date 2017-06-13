@@ -61,21 +61,11 @@ public class AddPaintActivity extends AppCompatActivity
 
                     String filename = titleet.getText().toString().trim() + ".png";
                     MyImage img = new MyImage(filename,filedate);
-                    mypainter.Save(getExternalPath() + "Mengmo/img/" + filedate + filename);
+                    mypainter.Save(getExternalPath() + "Mengmo/img/" + filedate+ filename);
                     Intent intent = getIntent();
                     intent.putExtra("addimg",img);
                     setResult(RESULT_OK,intent);
                     finish();
-                    /*
-
-            long now = System.currentTimeMillis();
-            Date date = new Date(now);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            filepath = getExternalPath() + "Mengmo/rec/"+dateFormat.format(date).toString()+"Rec.mp4";
-            filename = dateFormat.format(date).toString()+"Rec.mp4";
-            filedate = dateFormat.format(date).toString();
-
-                     */
                 }
                 break;
         }

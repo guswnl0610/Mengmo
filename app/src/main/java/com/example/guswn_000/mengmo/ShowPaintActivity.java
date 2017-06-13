@@ -96,6 +96,7 @@ public class ShowPaintActivity extends AppCompatActivity
                     mypainter.Save(getExternalPath() + "Mengmo/img/" + filedate + filename);
                     Intent intent = getIntent();
                     intent.putExtra("shownewimg",img);
+                    intent.putExtra("Originimgpath",originfilepath);
                     setResult(RESULT_OK,intent);
                     finish();
                     /*

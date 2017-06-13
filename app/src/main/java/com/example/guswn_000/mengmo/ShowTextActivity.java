@@ -92,15 +92,17 @@ public class ShowTextActivity extends AppCompatActivity
                 }
                 else
                 {
-                    String newtitle = titleet.getText().toString().trim();
+//                    String newtitle = titleet.getText().toString().trim();
+                    String newtitle = titleet.getText().toString().trim() + ".txt";
                     String newcontent = contentet.getText().toString();
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                     String newdate = dateFormat.format(date).toString();
                     MyText myText = new MyText(newtitle,newcontent,newdate);
-                    String newpath = getExternalPath() + "Mengmo/txt/" +newdate + newtitle + ".txt";
-                    String newfilename = newtitle + ".txt";
+//                    String newpath = getExternalPath() + "Mengmo/txt/" +newdate + newtitle + ".txt";
+                    String newpath = getExternalPath() + "Mengmo/txt/" +newdate + newtitle ;
+//                    String newfilename = newtitle + ".txt";
 
                     remove(originpath);
                     write(newpath,newcontent);

@@ -81,15 +81,17 @@ public class AddTextActivity extends AppCompatActivity
                 }
                 else
                 {
-                    txttitle = title.getText().toString().trim();
+//                    txttitle = title.getText().toString().trim();
+                    txttitle = title.getText().toString().trim() + ".txt";
                     txtcontent = content.getText().toString();
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                     txtdate = dateFormat.format(date).toString();
                     myText = new MyText(txttitle,txtcontent,txtdate);
-                    filepath = getExternalPath() + "Mengmo/txt/" +txtdate + txttitle + ".txt";
-                    filename = txttitle+".txt";
+//                    filepath = getExternalPath() + "Mengmo/txt/" +txtdate + txttitle + ".txt";
+                    filepath = getExternalPath() + "Mengmo/txt/" + txtdate + txttitle;
+//                    filename = txttitle+".txt";
                     write(filepath,txtcontent);
 
                     Intent intent = getIntent();
