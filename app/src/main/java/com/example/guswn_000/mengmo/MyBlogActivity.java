@@ -166,6 +166,7 @@ public class MyBlogActivity extends AppCompatActivity
         if(v.getId() == R.id.blogimage)
         {
             imageView.setImageResource(R.drawable.blog2);
+            imageView.setEnabled(false);
             thread.start();
         }
     }
