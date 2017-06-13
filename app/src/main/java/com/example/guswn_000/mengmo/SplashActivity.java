@@ -60,23 +60,6 @@ public class SplashActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//        int requestCode = 200;
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-//        {
-//            requestPermissions(permissions,requestCode);
-//        }
-//
-//
-//        try
-//        {
-//            Thread.sleep(3000);
-//        }
-//        catch (InterruptedException e)
-//        {
-//            e.printStackTrace();
-//        }
-//        startActivity(new Intent(this,MainActivity.class));
-//        finish();
 
         startTimeMillis = System.currentTimeMillis();
         if(Build.VERSION.SDK_INT >= 23)
@@ -97,22 +80,6 @@ public class SplashActivity extends Activity
             checkPermissions();
         }
     }
-
-    //    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode)
-//        {
-//            case 200:
-//                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-//                permissionToWriteAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-//                break;
-//        }
-//        if(!permissionToRecordAccepted) SplashActivity.super.finish();
-//        if(!permissionToWriteAccepted) SplashActivity.super.finish();
-//    }
 
     private void startNextActivity()
     {
