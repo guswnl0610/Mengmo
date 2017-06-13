@@ -31,6 +31,7 @@ public class ShowRecordActivity extends AppCompatActivity implements MediaPlayer
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_record);
+        setTitle("맹모장");
         playbtn = (ImageButton)findViewById(R.id.showrecplay);
         stopbtn = (ImageButton)findViewById(R.id.showrecstop);
         pausebtn = (ImageButton)findViewById(R.id.showrecpause);

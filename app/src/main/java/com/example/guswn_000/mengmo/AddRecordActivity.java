@@ -34,6 +34,7 @@ public class AddRecordActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_record);
+        setTitle("맹모장");
         start = (ImageButton)findViewById(R.id.recstart);
         stop = (ImageButton)findViewById(R.id.recstop);
         play = (ImageButton)findViewById(R.id.recplay);

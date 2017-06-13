@@ -26,6 +26,7 @@ public class AddPaintActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_paint);
+        setTitle("맹모장");
         titleet = (EditText)findViewById(R.id.ettitle);
         mypainter = (Mypainter)findViewById(R.id.painter);
     }

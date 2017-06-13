@@ -77,7 +77,7 @@ public class ShowTextActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(this,"비었음",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this,"비었음",Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 break;

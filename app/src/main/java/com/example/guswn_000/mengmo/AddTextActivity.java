@@ -33,6 +33,7 @@ public class AddTextActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_text);
+        setTitle("맹모장");
         title = (EditText)findViewById(R.id.titleET);
         content = (EditText)findViewById(R.id.contentET);
 
@@ -62,7 +63,7 @@ public class AddTextActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(this,"비었음",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this,"비었음",Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 break;
@@ -81,25 +82,6 @@ public class AddTextActivity extends AppCompatActivity
                 }
                 else
                 {
-////                    txttitle = title.getText().toString().trim();
-//                    txttitle = title.getText().toString().trim() + ".txt";
-//                    txtcontent = content.getText().toString();
-////                    long now = System.currentTimeMillis();
-////                    Date date = new Date(now);
-////                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-////                    txtdate = dateFormat.format(date).toString();
-//                    myText = new MyText(txttitle,txtcontent,txtdate);
-////                    filepath = getExternalPath() + "Mengmo/txt/" +txtdate + txttitle + ".txt";
-//                    filepath = getExternalPath() + "Mengmo/txt/" + txtdate + txttitle;
-////                    filename = txttitle+".txt";
-//
-//                    write(filepath,txtcontent);
-//
-//                    Intent intent = getIntent();
-//                    intent.putExtra("newtxt",myText);
-//                    setResult(RESULT_OK,intent);
-//
-//                    finish();
 
                     String newtitle = title.getText().toString().trim() + ".txt";
                     String newcontent = content.getText().toString();
@@ -156,7 +138,7 @@ public class AddTextActivity extends AppCompatActivity
         }
         else
         {
-            Toast.makeText(this,"비었음",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,"비었음",Toast.LENGTH_SHORT).show();
             finish();
         }
     }
