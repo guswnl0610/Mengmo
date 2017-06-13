@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity
             records.add(rec);
             recordAdapter.notifyDataSetChanged();
         }
+        recordAdapter.notifyDataSetChanged();
         mCursor.close();
     }
 
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity
             texts.add(txt);
             textAdapter.notifyDataSetChanged();
         }
+        textAdapter.notifyDataSetChanged();
         mCursor.close();
     }
 
@@ -168,6 +170,7 @@ public class MainActivity extends AppCompatActivity
             images.add(img);
             imageAdapter.notifyDataSetChanged();
         }
+        imageAdapter.notifyDataSetChanged();
         mCursor.close();
     }
 
