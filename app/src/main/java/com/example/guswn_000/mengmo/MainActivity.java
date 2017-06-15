@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         mDbOpenHelper.open();
 
         makeDirectories();
-
         init();
         initlistviews();
     }
@@ -199,6 +198,7 @@ public class MainActivity extends AppCompatActivity
             {
                 AlertDialog.Builder dlg = new AlertDialog.Builder(view.getContext());
                 dlg.setTitle("삭제 확인")
+                        .setIcon(R.drawable.icon)
                         .setMessage("선택한 음성녹음을 정말 삭제하시겠습니까?")
                         .setNegativeButton("취소",null)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity
             {
                 AlertDialog.Builder dlg = new AlertDialog.Builder(view.getContext());
                 dlg.setTitle("삭제 확인")
+                        .setIcon(R.drawable.icon)
                         .setMessage("선택한 메모를 삭제하시겠습니까?")
                         .setNegativeButton("취소",null)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -273,6 +274,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onItemLongClick(AdapterView<?> parent, View view,final int position, long id) {
                 AlertDialog.Builder dlg = new AlertDialog.Builder(view.getContext());
                 dlg.setTitle("삭제 확인")
+                        .setIcon(R.drawable.icon)
                         .setMessage("선택한 이미지를 삭제하시겠습니까?")
                         .setNegativeButton("취소",null)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
